@@ -7,7 +7,7 @@
     3.可配置进程访问间隔
     4.配置企业微信推送
 ## 图示
-   ![avatar](md/shouye.png)
-   ![avatar](md/tianjia.png)
-   ![avatar](md/rizhi.png)
+   ![avatar](https://github.com/cc373471664/jiankong/blob/master/md/shouye.png)
+   ![avatar](https://github.com/cc373471664/jiankong/blob/master/md/tianjia.png)
+   ![avatar](https://github.com/cc373471664/jiankong/blob/master/md/rizhi.png)
 
