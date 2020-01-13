@@ -10,6 +10,17 @@
     2.可查看进程日志情况
     3.可配置进程访问间隔
     4.配置企业微信推送
+## 安装方式
+   前端:进入`./web/` 进行`yarn install` 运行方式 `yarn run serve`
+   后端:进入`./go/` 进行`go run main.go`
+   配置文件:
+   在`./go/`文件中加入`config.yaml`内容为:
+   `qiwechat:
+      wecahtid: 31232312 #企业微信企业ID
+      agent_id: 13123 #应用agent_id
+      secret: 1231231231 #应用secret
+      ren: 234,32 #推送人ID逗号分隔
+   `
 ## 流程
    **1.首页可查看所有接口运行状态**
    ![avatar](https://github.com/cc373471664/jiankong/blob/master/md/shouye.png)
