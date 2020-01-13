@@ -37,7 +37,13 @@ type UrlListLogDB struct {
 	UnixTime string `json:"unix_time"`
 	Isce bool `json:"isce"`
 }
-
+/** 报价 *******/
+type BaoJingDb struct {
+	Name string `json:"name"`
+	AddTime string `json:"add_time"`
+	IsBao bool `json:"is_bao"`
+	Url string `json:"url"`
+}
 func ListTable()string{
 	return "list_"
 }
@@ -51,7 +57,7 @@ func ListLogTableOrder()string{
 	return "order_listlog_"
 }
 func BaoJingTable() string {
-	return "list_curlbaojing_"
+	return "listcurlbaojing_"
 }
 
 type ListModel struct {
@@ -160,6 +166,8 @@ func (this *ListModel)SendUrl(name string,isce bool) (sta bool)  {
 				}
 				if biaozhi==3{
 					urllist.Yong=0
+					/** 插入报警日志 *******/
+				conn.Do("hmset",redis.Args{}.Add(BaoJingTable()+name+"_"+s).AddFlat(&BaoJingDb{Name:name,AddTime:urllist.ZhiTime,IsBao:false,Url:urllist.Url})...)
 				}
 			}
 		}

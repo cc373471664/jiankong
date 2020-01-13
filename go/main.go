@@ -9,7 +9,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/robfig/cron"
 	"redisdui/app"
+	"redisdui/app/controller"
 	"redisdui/app/module"
 	"redisdui/config"
 	"time"
@@ -28,5 +30,12 @@ func main()  {
 			time.Sleep(1*time.Second)
 		}
 	}()
+	//	定时任务
+	c := cron.New()
+	c.AddFunc("*/5 * * * *", func() {
+		t:=controller.QiwechatStr{}
+		t.Tuisong()
+	})
+	c.Start()
 	router.Run()
 }

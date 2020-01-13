@@ -10,7 +10,10 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"redisdui/db"
 )
-
+/**
+  @author 373471664@qq.com cc 2020-01-13 14:27:35
+  @action 删除指定开头的key @param @return
+*/
 func DelKeys(name string) (err error)  {
 	conn:=db.Redgo.Get()
 	list,err:=redis.Strings(conn.Do("keys",name+"*"))
@@ -24,6 +27,10 @@ func DelKeys(name string) (err error)  {
 	}
 	return
 }
+/**
+  @author 373471664@qq.com cc 2020-01-13 14:27:51
+  @action 分页 @param @return
+*/
 func RedisPage(current,pagesize int) (int,int)  {
 	if current==1 {
 		return 0,pagesize

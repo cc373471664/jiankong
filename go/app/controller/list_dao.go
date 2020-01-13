@@ -29,6 +29,8 @@ type ListINT interface {
 	Run(c *gin.Context)
 //	是否启用
 	SendPao(c *gin.Context)
+//	企业微信推送
+	SendWechat(c *gin.Context)
 }
 
 type ListSTR struct {
@@ -139,4 +141,8 @@ func (this *ListSTR)SendPao(c *gin.Context)  {
 	}else{
 		util.Echo(false,"更改运行状态成功",c)
 	}
+}
+func (this *ListSTR)SendWechat(c *gin.Context)  {
+	t:=QiwechatStr{}
+	t.Tuisong()
 }
