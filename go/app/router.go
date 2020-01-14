@@ -27,4 +27,6 @@ func DefaultRoute(router *gin.Engine) {
 	router.POST("/send_pao",controller.ListINT(&controller.ListSTR{}).SendPao)
 	/** 测试失败企业微信推送 *******/
 	router.POST("/errqi",controller.ListINT(&controller.ListSTR{}).SendWechat)
+	/** websocket *******/
+	router.GET("/socketlist",controller.ListINT(&controller.ListSTR{}).SendSocketList)
 }

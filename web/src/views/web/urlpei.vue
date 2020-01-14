@@ -17,12 +17,14 @@
 
                 >
                     <span slot="sta" slot-scope="text, t">
-                        <template  v-if="t.sta==200">   <a-tag color="green">200 👌</a-tag></template>
-                          <template v-else ><a-tag color="pink">{{t.sta}} 😩</a-tag></template>
+                        <template v-if="t.sta==200">   <a-tag color="green">200 👌</a-tag></template>
+                          <template v-else><a-tag color="pink">{{t.sta}} 😩</a-tag></template>
                     </span>
                     <span slot="yong" slot-scope="text, t">
-                        <template   v-if="t.yong"><a-icon @click="click_tingyun(t.name)" type="pause-circle" style="color: red;cursor: pointer" />停止</template>
-                        <template   v-else><a-icon type="play-circle" @click="click_paoyun(t.name)" style="color: #55a532;cursor: pointer" />启动</template>
+                        <template v-if="t.yong"><a-icon @click="click_tingyun(t.name)" type="pause-circle"
+                                                        style="color: red;cursor: pointer"/>停止</template>
+                        <template v-else><a-icon type="play-circle" @click="click_paoyun(t.name)"
+                                                 style="color: #55a532;cursor: pointer"/>启动</template>
                     </span>
                     <span slot="action" slot-scope="text, record">
                         <a-row><a-col :span="8"><a-icon type="stock" @click="rizhi_click(record)"/></a-col>
@@ -72,8 +74,8 @@
                     :loading="loading"
             >
                  <span slot="sta" slot-scope="text, t">
-                         <template  v-if="t.sta==200">   <a-tag color="green">200 👌</a-tag></template>
-                          <template v-else ><a-tag color="pink">{{t.sta}} 😩</a-tag></template>
+                         <template v-if="t.sta==200">   <a-tag color="green">200 👌</a-tag></template>
+                          <template v-else><a-tag color="pink">{{t.sta}} 😩</a-tag></template>
                     </span>
             </a-table>
         </a-drawer>
@@ -101,12 +103,12 @@
         {
             title: '最后一次',
             dataIndex: 'sta',
-            scopedSlots: { customRender: 'sta' },
+            scopedSlots: {customRender: 'sta'},
         },
         {
             title: '状态',
             dataIndex: 'yong',
-            scopedSlots: { customRender: 'yong' },
+            scopedSlots: {customRender: 'yong'},
         },
         {
             title: '操作',
@@ -123,13 +125,16 @@
         {
             title: '状态',
             dataIndex: 'sta',
-            scopedSlots: { customRender: 'sta' },
+            scopedSlots: {customRender: 'sta'},
 
         },
     ]
     export default {
         mounted() {
             this.fetch();
+        },
+        created() {
+            this.sendWebsocket()
         },
         data() {
             return {
@@ -162,9 +167,9 @@
                 this.request_log(this.active_name, pagination.current, pagination.pageSize)
             },
             fetch() {
-                this.$post("/go/urllist").then((res) => {
-                    this.data = res.data
-                })
+                // this.$post("/go/urllist").then((res) => {
+                //     this.data = res.data
+                // })
             },
             xiu_click(val) {
                 console.log(val)
@@ -234,21 +239,42 @@
                 this.visible2 = true
                 this.request_log(val.name, this.pagination.pageNo, this.pagination.pageSize)
             },
-            click_tingyun(name){
-                this.run_req(name,0)
+            click_tingyun(name) {
+                this.run_req(name, 0)
             },
-            click_paoyun(name){
-                this.run_req(name,1)
+            click_paoyun(name) {
+                this.run_req(name, 1)
             },
-            run_req(val,yong){
-                this.$post("/go/send_pao", {"name": val,"yong":yong}).then((res) => {
-               if (res.sta==0){
-                   this.$message.success(res.data);
-               }else{
-                   this.$message.error(res.data)
-               }
-               this.fetch()
+            run_req(val, yong) {
+                this.$post("/go/send_pao", {"name": val, "yong": yong}).then((res) => {
+                    if (res.sta == 0) {
+                        this.$message.success(res.data);
+                    } else {
+                        this.$message.error(res.data)
+                    }
+                    this.fetch()
                 })
+            },
+            /** 实时更新list数据列表 *******/
+            sendWebsocket() {
+                var that=this
+                let path = window.location.host;
+                // let ws = new WebSocket("ws://localhost:8080/go_socket/socketlist");
+                let ws=new WebSocket('ws://' + location.host + '/socket/socketlist' )
+                //连接打开时触发
+                ws.onopen = function (evt) {
+                    console.log("打开通道");
+                    ws.send("Hello WebSockets!");
+                };
+                //接收到消息时触发
+                ws.onmessage = function (evt) {
+
+                    that.data=JSON.parse(evt.data)
+                };
+                //连接关闭时触发
+                ws.onclose = function (evt) {
+                    console.log("Connection closed.");
+                };
             }
         },
 

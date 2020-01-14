@@ -7,9 +7,13 @@
 package controller
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"net/http"
 	"redisdui/app/module"
 	"redisdui/util"
+	"time"
 )
 
 type ListINT interface {
@@ -31,6 +35,8 @@ type ListINT interface {
 	SendPao(c *gin.Context)
 //	企业微信推送
 	SendWechat(c *gin.Context)
+//	socketlist
+	SendSocketList(c *gin.Context)
 }
 
 type ListSTR struct {
@@ -145,4 +151,34 @@ func (this *ListSTR)SendPao(c *gin.Context)  {
 func (this *ListSTR)SendWechat(c *gin.Context)  {
 	t:=QiwechatStr{}
 	t.Tuisong()
+}
+var upGrader = websocket.Upgrader{
+	CheckOrigin: func (r *http.Request) bool {
+		return true
+	},
+}
+
+func (this *ListSTR)SendSocketList(c *gin.Context)  {
+	//升级get请求为webSocket协议
+	ws, err := upGrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		return
+	}
+	defer ws.Close()
+	for {
+		//读取ws中的数据
+		mt, _, err := ws.ReadMessage()
+		if err != nil {
+			break
+		}
+		for{
+			data,err:=this.ListModel.List()
+			t,_:=json.Marshal(data)
+			err = ws.WriteMessage(mt, t)
+			if err != nil {
+				break
+			}
+			time.Sleep(1*time.Second)
+		}
+	}
 }
