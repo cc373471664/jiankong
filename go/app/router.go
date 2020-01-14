@@ -29,4 +29,8 @@ func DefaultRoute(router *gin.Engine) {
 	router.POST("/errqi",controller.ListINT(&controller.ListSTR{}).SendWechat)
 	/** websocket *******/
 	router.GET("/socketlist",controller.ListINT(&controller.ListSTR{}).SendSocketList)
+	/** 清理缓存 *******/
+	router.POST("/qing_huancun",controller.HuancuncleanINT(&controller.HuancuncleanSTR{}).Clean)
+	/** 读取缓存大小 *******/
+	router.POST("/du_huanredis",controller.HuancuncleanINT(&controller.HuancuncleanSTR{}).DuHuan)
 }

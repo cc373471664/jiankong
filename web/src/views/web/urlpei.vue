@@ -3,8 +3,11 @@
         <a-layout>
             <a-layout-header>
                 <a-row>
-                    <a-col :span="5">
+                    <a-col :span="4">
                         <a-button type="primary" @click="add_click">添加计划</a-button>
+                    </a-col>
+                    <a-col :span="2" :offset="18">
+                        <a-button type="danger" @click="qing_huancun"><a-icon type="delete" />缓存({{size}})</a-button>
                     </a-col>
                 </a-row>
             </a-layout-header>
@@ -135,12 +138,14 @@
         },
         created() {
             this.sendWebsocket()
+            this.huanrequest()
         },
         data() {
             return {
                 visible2: false,
                 visible: false,
                 data: [],
+                size:"0M",
                 data2: [],
                 loading: false,
                 columns,
@@ -159,6 +164,11 @@
             };
         },
         methods: {
+            huanrequest(){
+                this.$post("/go/du_huanredis").then((res) => {
+                    this.size=res.size+"M"
+                })
+            },
             handleTableChange(pagination, filters, sorter) {
                 console.log(pagination);
                 const pager = {...this.pagination};
@@ -167,9 +177,9 @@
                 this.request_log(this.active_name, pagination.current, pagination.pageSize)
             },
             fetch() {
-                // this.$post("/go/urllist").then((res) => {
-                //     this.data = res.data
-                // })
+                this.$post("/go/urllist").then((res) => {
+                    this.data = res.data
+                })
             },
             xiu_click(val) {
                 console.log(val)
@@ -275,6 +285,17 @@
                 ws.onclose = function (evt) {
                     console.log("Connection closed.");
                 };
+            },
+            qing_huancun(){
+                this.$post("/go/qing_huancun",).then((res) => {
+                  if (res.err==""){
+                      this.$message.success("清理成功")
+                      this.huanrequest()
+
+                  }else{
+                      this.$message.error(res.err)
+                  }
+                })
             }
         },
 

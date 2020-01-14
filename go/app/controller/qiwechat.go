@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gomodule/redigo/redis"
-	"github.com/spf13/viper"
 	"redisdui/app/module"
 	"redisdui/db"
 	"redisdui/util"
@@ -19,39 +18,6 @@ import (
 
 type QiwechatStr struct {
 }
-
-// 加载配置
-func LoadConfig(fpath string) (c *Config, err error) {
-	if fpath == "" {
-		fpath = "./config.yaml"
-	}
-	v := viper.New()
-	v.SetConfigFile(fpath)
-	v.SetConfigType("yaml")
-	if err1 := v.ReadInConfig(); err1 != nil {
-		err = err1
-		return
-	}
-	c = &Config{}
-	c.Qiwechat.Wecahtid = v.GetString("qiwechat.wecahtid")
-	c.Qiwechat.AgentId = v.GetInt("qiwechat.agent_id")
-	c.Qiwechat.Secret = v.GetString("qiwechat.secret")
-	c.Qiwechat.Ren = v.GetString("qiwechat.ren")
-	return
-}
-
-// Config 配置参数
-type Config struct {
-	Qiwechat ConfigPei
-}
-
-type ConfigPei struct {
-	Wecahtid string `json:"wecahtid"`
-	AgentId  int `json:"agent_id"`
-	Secret   string `json:"secret"`
-	Ren      string `json:"ren"`
-}
-
 func (this *QiwechatStr) Tuisong() {
 	conn := db.Redgo.Get()
 	/** 查询所有需要发送的 *******/
@@ -75,7 +41,7 @@ func (this *QiwechatStr) Tuisong() {
 }
 func (this *QiwechatStr) FaRen(jingDb module.BaoJingDb) (err error) {
 	/** 读取根目录ren.txt文件读取人 *******/
-	t, err := LoadConfig("")
+	t, err := db.LoadConfig("")
 	if err != nil {
 		fmt.Println("配置文件打开错误:", err.Error())
 	}

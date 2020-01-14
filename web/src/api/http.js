@@ -43,10 +43,13 @@ export function fetch(url,params ={}){
 */
 
 export function post(url,data ={}){
+    let hide = this.$message.loading('加载中..', 0);
     return new Promise((resolve,reject) =>{
         axios.post(url,data).then(response =>{
+            setTimeout(hide, 0);
             resolve(response.data)
         },err =>{
+            setTimeout(hide, 0);
             reject(err)
         })
     })
