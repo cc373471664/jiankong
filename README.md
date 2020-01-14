@@ -10,6 +10,7 @@
     2.可查看进程日志情况
     3.可配置进程访问间隔
     4.配置企业微信推送
+    5.首页加入websocket的更新
 ## 安装方式
     前端:进入./web/ 进行yarn install 运行方式 yarn run serve
     后端:进入./go/ 进行go run main.go
