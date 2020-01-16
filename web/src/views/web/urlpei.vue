@@ -290,7 +290,7 @@
             qing_huancun(){
                 this.$post("/go/qing_huancun",).then((res) => {
                   if (res.err==""){
-                      this.$message.success("清理成功")
+                      this.$message.success("清理任务已启用,后台正在努力清理")
                       this.huanrequest()
 
                   }else{

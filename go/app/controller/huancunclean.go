@@ -25,14 +25,12 @@ type HuancuncleanSTR struct {
 }
 
 func (this *HuancuncleanSTR)Clean(c *gin.Context)  {
-	err:=util.DelKeys(module.ListLogTableOrder())
-	err=util.DelKeys(module.ListLogTable())
-	_,err=db.Redgo.Get().Do("BGREWRITEAOF")
-	if err!=nil {
-		c.JSON(200,gin.H{"err":"清理失败:"+err.Error()})
-	}else{
-		c.JSON(200,gin.H{"err":""})
-	}
+	go func() {
+	util.DelKeys(module.ListLogTableOrder())
+	util.DelKeys(module.ListLogTable())
+		db.Redgo.Get().Do("BGREWRITEAOF")
+	}()
+	c.JSON(200,gin.H{"err":""})
 }
 
 func (this *HuancuncleanSTR)DuHuan(c *gin.Context)  {

@@ -151,6 +151,10 @@ func (this *ListModel) SendUrl(name string, isce bool) (sta bool) {
 	/** 插入日志 *******/
 	conn.Do("hmset", redis.Args{}.Add(ListLogTable()+name+"_"+s).AddFlat(&urllistlogdb)...)
 	conn.Do("lpush", ListLogTableOrder()+urllistlogdb.Name, urllistlogdb.UnixTime)
+	//加入过期
+	conn.Do("expire",ListLogTable()+name+"_"+s,60*60*24)
+	conn.Do("expire",ListLogTableOrder()+urllistlogdb.Name,60*60*24)
+
 	//更新下次时间戳
 	urllist.XiaTime = time.Now().Unix() + int64(urllist.Jiange)
 	urllist.ZhiTime = util.SendTime()
