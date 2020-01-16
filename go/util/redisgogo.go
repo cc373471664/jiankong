@@ -35,6 +35,6 @@ func RedisPage(current,pagesize int) (int,int)  {
 	if current==1 {
 		return 0,pagesize
 	}else{
-		return (current*pagesize)-pagesize+1,current*pagesize
+		return (current-1)*pagesize,current*pagesize-1
 	}
 }
