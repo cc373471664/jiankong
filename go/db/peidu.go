@@ -27,12 +27,14 @@ func LoadConfig(fpath string) (c *Config, err error) {
 	c.Qiwechat.Ren = v.GetString("qiwechat.ren")
 	c.Redis.Path=v.GetString("redis.path")
 	c.Redis.Host=v.GetString("redis.host")
+	c.Main.Port=v.GetInt("main.port")
 	return
 }
 // Config 配置参数
 type Config struct {
 	Qiwechat ConfigPei
 	Redis RedisPei
+	Main Main
 }
 
 type ConfigPei struct {
@@ -45,4 +47,8 @@ type ConfigPei struct {
 type RedisPei struct {
 	Path string `json:"path"`
 	Host string `json:"host"`
+}
+//主配置
+type Main struct {
+	Port int `json:"port"`
 }

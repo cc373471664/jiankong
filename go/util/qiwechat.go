@@ -5,6 +5,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/json"
+	"fmt"
 	"github.com/patrickmn/go-cache"
 	"io/ioutil"
 	"log"
@@ -104,18 +105,20 @@ func SendMsg(Corpid string,EncodingAESKey string,agentid int,touser string,topar
 	send_url  := "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token="+AppActoken+""
 	client := &http.Client{}
 	msg := strings.Replace(messages(touser,toparty,agentid,totag,Textcard),"\\\\","\\",-1)
+	fmt.Println(msg,"ss")
 	req, _ := http.NewRequest("POST", send_url, bytes.NewBuffer([]byte(msg)))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("charset","UTF-8")
 	resp, err := client.Do(req)
 	if err!=nil {
+		fmt.Println("企业微信推送接口调用错误"+err.Error())
 		return false
-
 	}else{
 		body, _ := ioutil.ReadAll(resp.Body)
 		var message Messagesshou
 		json.Unmarshal(body,&message)
 		if message.ErrorCode!=0 {
+			fmt.Println("企业微信推送接口调用错误"+strconv.Itoa(message.ErrorCode)+":"+message.ErrorMsg)
 			return false
 		}else{
 			return true

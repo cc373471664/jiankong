@@ -5,7 +5,7 @@ module.exports = {
         disableHostCheck: true,
         proxy: {
             '/go/': {
-                target: 'http://localhost:8080',
+                target: 'http://localhost:8071',
                 secure: false,
                 ws: true, // 是否启用websockets
                 changeOrigin: true,
@@ -14,7 +14,7 @@ module.exports = {
                 }
             },
             '/socket': {
-                target: 'ws://localhost:8080',//后端目标接口地址
+                target: 'ws://localhost:8071',//后端目标接口地址
                 changeOrigin: true,//是否允许跨域
                 pathRewrite: {
                     '^/socket': '',//重写,

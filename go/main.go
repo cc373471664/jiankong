@@ -14,7 +14,8 @@ import (
 	"redisdui/app/controller"
 	"redisdui/app/module"
 	"redisdui/config"
-	"time"
+	"redisdui/db"
+	"strconv"
 )
 
 func main()  {
@@ -23,19 +24,21 @@ func main()  {
 	//全局跨域1
 	router.Use(config.Logger())
 	app.DefaultRoute(router)
-	go func() {
-		for{
-			t:=module.ListModel{}
-			t.Run()
-			time.Sleep(1*time.Second)
-		}
-	}()
 	//	定时任务
 	c := cron.New()
 	c.AddFunc("*/5 * * * *", func() {
 		t:=controller.QiwechatStr{}
 		t.Tuisong()
 	})
+	c.AddFunc("* * * * *", func() {
+		t:=module.ListModel{}
+		t.Run()
+	})
 	c.Start()
-	router.Run()
+	/** 读取根目录ren.txt文件读取人 *******/
+	t, err := db.LoadConfig("")
+	if err!=nil {
+		panic("配置文件打开错误:"+err.Error())
+	}
+	router.Run(":"+strconv.Itoa(t.Main.Port))
 }
